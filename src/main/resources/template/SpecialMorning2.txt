@@ -1,0 +1,18 @@
+{{dateAndWeek.DATA}}
+
+城市：{{city.DATA}}
+
+实时天气：{{now_weather.DATA}} {{now_temp.DATA}}
+气温：{{today_low.DATA}}~{{today_high.DATA}}
+风速：{{now_wind_dir.DATA}},{{now_wind_class.DATA}}
+湿度：{{now_rh.DATA}}
+今天~后天：{{today_weather.DATA}},{{tomorrow_weather.DATA}},{{after_tomorrow_weather.DATA}}
+
+❤在一起❤：{{meet_days.DATA}}
+
+距离豪豪的生日：{{girl_birthday.DATA}}
+距离凯凯的生日：{{boy_birthday.DATA}}
+
+{{daily_en.DATA}}
+
+{{daily_cn.DATA}}

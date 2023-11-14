@@ -1,0 +1,9 @@
+{{date.DATA}}微语报，{{week.DATA}}，工作愉快，生活喜乐！
+
+1、{{news_1.DATA}}
+2、{{news_2.DATA}}
+3、{{news_3.DATA}}
+4、{{news_4.DATA}}
+5、{{news_5.DATA}}
+
+【微语】{{note_content.DATA}}  —— {{note_author.DATA}}

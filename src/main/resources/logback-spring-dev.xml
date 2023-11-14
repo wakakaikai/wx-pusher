@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="10 seconds">
+
+    <contextName>logback</contextName>
+
+    <!--定义日志文件的存储地址 可以在LogBack 的配置中使用相对路径-->
+    <property name="LOG_HOME" value="./log"/>
+    <property name="LOG_NAME" value="wechat"/>
+
+    <!-- 彩色日志依赖的渲染类 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex"
+                    converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx"
+                    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+
+
+    <!-- 彩色日志格式 -->
+    <property name="CONSOLE_LOG_PATTERN"
+              value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+
+    <!-- Console 输出设置 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 按照每天生成日志文件 -->
+    <appender name="DEBUG-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <Prudent>true</Prudent>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <FileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/${LOG_NAME}-debug-%i.log</FileNamePattern>
+            <!--日志文件保留天数-->
+            <MaxHistory>3</MaxHistory>
+            <totalSizeCap>500MB</totalSizeCap>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!--文件达到 最大128MB时会被压缩和切割 -->
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+        </encoder>
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+
+    </appender>
+
+    <!-- 异步输出 -->
+    <appender name="ASYNC_DEBUG" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 队列的最大容量,该值会影响性能.默认值为256 -->
+        <queueSize>1024</queueSize>
+        <!-- 队列剩余容量小于discardingThreshold,则会丢弃TRACT、DEBUG、INFO级别的日志;默认值-1,为queueSize的20%;0不丢失日志 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!--是否提取调用者数据-->
+        <includeCallerData>false</includeCallerData>
+        <!--如果为false（默认值），则追加程序将阻止追加到完整队列，而不是丢失消息。
+        设置为true时，附加程序只会丢弃消息，不会阻止您的应用程序-->
+        <neverBlock>true</neverBlock>
+        <!-- 添加附加的appender,最多只能添加一个 -->
+        <appender-ref ref="DEBUG-FILE"/>
+    </appender>
+
+
+    <!-- 出错日志 appender  -->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <Prudent>true</Prudent>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 按天回滚 daily -->
+            <!-- log.dir 在maven profile里配置 -->
+            <FileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/${LOG_NAME}-error-%i.log</FileNamePattern>
+            <!-- 日志最大的历史 60天 -->
+            <maxHistory>3</maxHistory>
+            <totalSizeCap>500MB</totalSizeCap>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!--文件达到 最大128MB时会被压缩和切割 -->
+                <maxFileSize>200MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <!--mybatis log configure -->
+    <logger name="com.apache.ibatis" level="info"/>
+    <logger name="java.sql.Connection" level="warn"/>
+    <logger name="java.sql.Statement" level="warn"/>
+    <logger name="java.sql.PreparedStatement" level="warn"/>
+    <logger name="com.zhao.wechat" level="debug"/>
+    <logger name="springfox.documentation" level="warn"></logger>
+    <!-- 日志输出级别 -->
+    <root level="INFO">
+        <!-- 不向控制器台输出-->
+        <appender-ref ref="DEBUG-FILE"/>
+    </root>
+</configuration>

@@ -1,0 +1,58 @@
+server:
+  port: 9090
+#微信相关配置信息
+wx:
+  # 接受特殊信息模板的openId
+  # 需要注意在 -后面有一个空格，这里是填写special类型的订阅者的openId的地方，有几行就加几个-
+  specialOpenIdList:
+    - otMNF6Egf2SQux5TT94hC9TqihF0
+    - otMNF6Emuo93TfTO79aMiCAYyFmc
+# 百度天气配置
+baidu:
+  server: https://api.map.baidu.com
+  ak: M3gGmcRY2Yhl2inw5tE5oGilrQ762rdV
+# 天行数据
+tianxin:
+  server: http://api.tianapi.com
+  key: f59f9cd8cf2586e0b7f51ed3bfeabb04
+# 有道翻译
+youdaofanyi:
+  server: https://fanyi.youdao.com/translate
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://116.62.69.210:3306/wechat?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: lzk
+    password: Jslzk86596682@
+    hikari:
+      minimum-idle: 5
+      # 空闲连接存活最大时间，默认600000（10分钟）
+      idle-timeout: 180000
+      # 连接池最大连接数，默认是10
+      maximum-pool-size: 100
+      # 此属性控制从池返回的连接的默认自动提交行为,默认值：true
+      auto-commit: true
+      # 连接池名称
+      pool-name: MyHikariCP
+      # 此属性控制池中连接的最长生命周期，值0表示无限生命周期，默认1800000即30分钟
+      max-lifetime: 1800000
+      # 数据库连接超时时间,默认30秒，即30000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+  jpa:
+    show-sql: true # 默认false，在日志里显示执行的sql语句
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update #指定为update，每次启动项目检测表结构有变化的时候会新增字段，表不存在时会 新建，如果指定create，则每次启动项目都会清空数据并删除表，再新建
+      naming:
+        #指定jpa的自动表生成策略，驼峰自动映射为下划线格式
+        strategy: org.hibernate.boot.model.naming.ImprovedNamingStrategy
+
+# 日志
+#logging:
+#  config: classpath:logback-spring-dev.xml
